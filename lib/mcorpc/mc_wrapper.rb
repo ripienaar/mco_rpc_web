@@ -32,6 +32,10 @@ class MCORPC
       end
     end
 
+    def stats
+      @agent.stats
+    end
+
     def call(action, arguments)
       request_arguments = {}
       arguments ||= {}
