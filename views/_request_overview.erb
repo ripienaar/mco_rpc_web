@@ -1,0 +1,48 @@
+<table class="table table-condensed">
+  <thead><tr><th colspan=2>RPC Request:</th></tr></thead>
+  <tbody>
+    <tr><td>Agent:</td><td><strong><%= @agent %></strong></td></tr>
+    <tr><td>Action:</td><td><strong><%= @action %></strong></td></tr>
+    <tr><td>Verbose:</td><td><strong><%= @verbose %></strong></td></tr>
+  </tbody>
+</table>
+
+<!--
+<table class="table table-condensed">
+  <thead><tr colspan=2><th>Arguments:</th></tr></thead>
+  <tbody>
+  <% unless @arguments.empty? %>
+    <% @arguments.each do |argument| %>
+      <tr>
+        <td><%= h argument.first %></td>
+        <td><%= h argument.last %></td>
+      </tr>
+    <% end %>
+  <% else %>
+    <tr><td>No arguments</td></tr>
+  <% end %>
+  </tbody>
+</table>
+-->
+
+<% unless @client.agent.options[:filter]["cf_class"].empty? %>
+  <table class="table table-condensed">
+    <thead><tr><th colspan=2>Class Filter:</th></tr></thead>
+    <tbody>
+      <% @client.agent.options[:filter]["cf_class"].each do |f| %>
+        <tr><td><%= f %></td></tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% unless @client.agent.options[:filter]["fact"].empty? %>
+  <table class="table table-condensed">
+    <thead><tr><th colspan=2>Fact Filter:</th></tr></thead>
+    <tbody>
+      <% @client.agent.options[:filter]["fact"].each do |f| %>
+        <tr><td><%= "%s%s%s" % [f[:fact], f[:operator].gsub("==", "="), f[:value]] %></td></tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

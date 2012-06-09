@@ -113,6 +113,7 @@ class MCORPC
         @error = "Failed to run request <em>%s#%s</em>: <strong>%s</strong> (%s)" % [@agent, @action, e.to_s, e.class]
       end
 
+      @arguments ||= {}
 
       erb :generic_result_view
     end

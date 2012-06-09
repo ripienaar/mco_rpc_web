@@ -15,8 +15,11 @@
   end
 %>
 
-<% unless @error %>
-<blockquote>$ mco rpc <%= @agent %> <%= @action %> <%= @arguments.map {|v| "%s=%s" % [v.first, v.last.to_s.gsub("'", "\'")]}.join(" ") %><%= @verbose == "true" ? " -v" : "" %></blockquote>
+<% unless @arguments.empty? %>
+  <h6>Request Arguments</h6>
+  <%= @arguments.map {|v| "%s=%s" % [v.first, v.last.to_s.gsub("'", "\'")]}.join(" ") %>
+  <br />
+  <br />
 <% end %>
 
 <% if @ok_count > 0 && (@action_ddl[:display] != :failed || @verbose) %>

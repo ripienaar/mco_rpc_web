@@ -34,11 +34,13 @@ class MCORPC
 
     def call(action, arguments)
       request_arguments = {}
+      arguments ||= {}
+
       ddl = @agent.ddl.action_interface(action)
+
 
       if arguments
         arguments.keys.each do |key|
-
           unless arguments[key] == ""
             skey = key.to_sym
 
