@@ -1,0 +1,139 @@
+<H1><%= params[:agent].capitalize %> Agent <small><%= @ddl.meta[:description] %></small></H1>
+
+<br />
+
+<H1><small><%= @action_interface[:description] %></small></H1>
+
+<br />
+
+<form class="form-horizontal" id="rpc_form" action="/agent/<%= @agent %>/run/<%= @action %>" onSubmit="$('#waitingModal').modal()">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#required" data-toggle="tab">Required Inputs</a></li>
+    <% if @optional_inputs.size > 0 %>
+      <li><a href="#optional" data-toggle="tab">Optional Inputs</a></li>
+    <% end %>
+    <li><a href="#discovery" data-toggle="tab">Discovery Filters</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade in active" id="required">
+      <% unless @required_inputs.empty? %>
+        <% @required_inputs.sort_by{|i| @action_interface[:input][i][:prompt]}.each do |input| %>
+          <%= render_input_form(input, @action_interface[:input][input]) %>
+        <% end %>
+      <% end %>
+        <fieldset>
+          <div class="control-group">
+            <label class="control-label">
+              Dispaly all results
+            </label>
+            <div class="controls">
+              <input type="checkbox" name="options[verbose]" value="true">
+            </div>
+          </div>
+        </fieldset>
+
+    </div>
+
+    <% if @optional_inputs.size > 0 %>
+      <div class="tab-pane fade in" id="optional">
+        <% @optional_inputs.sort_by{|i| @action_interface[:input][i][:prompt]}.each do |input| %>
+          <%= render_input_form(input, @action_interface[:input][input]) %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="tab-pane fade in" id="discovery">
+      <div class="input-prepend offset2">
+        <button onclick='return(false);' type="submit" class="btn" id="combined_filter_btn"><i class="icon-search"></i>Filter</button><button onclick='return(false);' type="submit" class="btn" id="combined_filter_reset"><i class="icon-remove"></i>Reset</button><input class="span9" type="text" id="combined_filter_value" name="filter[combined]" placeholder="Combined Filter (-W)" size="200">
+      </div>
+      <br />
+      <br />
+      <H3>Discovered Nodes</H3>
+      <br />
+      <div class="span8">
+      <table id="discovered-nodes" class="table-selectable">
+        <tbody>
+          <tr><td colspan=6>No search done yet, all nodes with the <%= @agent %> agent will be affected</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hide" id="waitingModal">
+    <div class="modal-header">
+      <H3>Waiting for replies...</H3>
+    </div>
+    <div class="modal-body">
+      Please wait while your request is being performed, timeout is <%= @ddl.meta[:timeout] %> seconds
+    </div>
+  </div>
+
+  <br />
+  <button type="submit" id="run_request" class="btn btn-primary"><i class="icon-play icon-white"></i> Run Request</button>
+  <button type="reset" class="btn">Cancel</button>
+  <select multiple="true" name="filter[identity][]" id="identity_filter_value" style="visibility:hidden"> </select>
+</form>
+<hr>
+
+<script>
+  $("button#run_request").click(function() {
+    $("#identity_filter_value").empty();
+    $("#discovered-nodes td.ui-selected").each(function() {
+      if (!$(this).html() == "") {
+        $("#identity_filter_value").append($("<option/>", {
+                                            value: $(this).html(),
+                                            text: $(this).html(),
+                                            selected: "selected"
+                                           }));
+      }
+    });
+  });
+
+  $("button#combined_filter_reset").click(function() {
+    $('#combined_filter_value').val("");
+    $("#discovered-nodes tr").remove();
+    $('#discovered-nodes > tbody').append("<tr><td colspan=6>No search done yet, all nodes with the <%= @agent %> agent will be affected</td></tr>");
+  });
+
+  $("button#combined_filter_btn").click(function() {
+    if (!$('#combined_filter_value').val()) {
+      var filter = "/./"
+    } else {
+      var filter = $('#combined_filter_value').val()
+    }
+
+    var url = "../discover/combined/" + encodeURIComponent(filter) + "?groupsize=6"
+
+    $.getJSON(url, function(data) {
+      $("#discovered-nodes tr").remove();
+
+      var tablebody = ""
+      var count = 0
+
+      $.each(data, function(groupidx, nodegroup) {
+        tablebody = tablebody + "<tr>";
+
+        $.each(nodegroup, function(idx, node) {
+          if (node) {
+            tablebody = tablebody + "<td>" + node + "</td>";
+
+            count++;
+          } else {
+            tablebody = tablebody + "<td></td>";
+          }
+        });
+
+        tablebody = tablebody + "</tr>"
+
+      });
+
+      if (count > 0) {
+        $('#discovered-nodes > tbody').append(tablebody)
+      } else {
+        $('#discovered-nodes > tbody').append("<tr><td colspan=6>Did not discover any nodes matching <em>" + filter + "</em></td></tr>")
+      }
+    });
+  });
+</script>

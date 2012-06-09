@@ -1,0 +1,56 @@
+<%
+  @action_ddl = @ddl.action_interface(@action)
+  @ok_count = 0
+  @error_count = 0
+
+  if @verbose
+    @display_mode = "all"
+  else
+    @display_mode = @action_ddl[:display] == :always ? "all" : @action_ddl[:display].to_s
+  end
+
+  @results.each do |r|
+    @ok_count += 1 if r[:statuscode] == 0
+    @error_count += 1 if r[:statuscode] > 0
+  end
+%>
+
+<% unless @error %>
+<blockquote>$ mco rpc <%= @agent %> <%= @action %> <%= @arguments.map {|v| "%s=%s" % [v.first, v.last.to_s.gsub("'", "\'")]}.join(" ") %><%= @verbose == "true" ? " -v" : "" %></blockquote>
+<% end %>
+
+<% if @ok_count > 0 && (@action_ddl[:display] != :failed || @verbose) %>
+    <h6>Successful Responses</h6>
+    <%= @partial_statuses = [0]; erb :_result_table_partial %>
+<% end %>
+
+<% if @error_count > 0 && (@action_ddl[:display] != :ok || @verbose) %>
+    <h6>Failed Responses</h6>
+    <%= @partial_statuses = [1,2,3,4,5]; erb :_result_table_partial %>
+<% end %>
+
+<% unless @results.empty? %>
+  <% if @error_count > 0 && @ok_count == 0 %>
+      <div class="alert alert-error">
+  <% elsif @error_count > 0 && @ok_count > 0 %>
+      <div class="alert alert-warning">
+  <% elsif @error_count == 0 && @ok_count == 0 %>
+      <div class="alert alert-error">
+  <% else %>
+      <div class="alert alert-success">
+  <% end %>
+
+  <p><strong><%= @ok_count %></strong> successful and <strong><%= @error_count %></strong> failed responses. Showing <strong><%= @display_mode %></strong> results.</p>
+  </div>
+<% end %>
+
+<% unless request.referer == "/" %>
+    <a href="<%= request.referer %>" class="btn large primary">Back</a>
+<% end %>
+
+<script>
+  $(function () {
+    $("th[rel=popover]").popover({placement: "bottom", delay: 1000});
+  })
+</script>
+

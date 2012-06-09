@@ -1,0 +1,37 @@
+  <fieldset>
+    <div class="control-group">
+      <label class="control-label" for="input01"><%= @input_interface[:prompt] %></label>
+      <div class="controls">
+        <% if @input_interface[:type] == :string %>
+          <input type="text" maxlength=<%= @input_interface[:maxlength] %> class="input-xlarge" id="input01" name="arguments[<%= @input_name %>]">
+          <p class="help-block"><%= @input_interface[:description] %></p>
+
+        <% elsif @input_interface[:type] == :list %>
+          <select id="input01" name="arguments[<%= @input_name %>]">
+          <% @input_interface[:list].sort.each do |option| %>
+            <option value="<%= option %>"><%= option %></option>
+          <% end %>
+          </select>
+          <p class="help-block"><%= @input_interface[:description] %></p>
+
+        <% elsif [:integer, :float, :number].include?(@input_interface[:type]) %>
+          <input type="number" class="input-xlarge" id="input01" name="arguments[<%= @input_name %>]">
+          <p class="help-block"><%= @input_interface[:description] %></p>
+
+        <% elsif @input_interface[:type] == :boolean %>
+          <% if @input_interface[:optional] == true %>
+            <label class="radio">
+              <input type="radio" name="arguments[<%= @input_name %>]" value="unset" checked>Unset
+            </label>
+          <% end %>
+          <label class="radio">
+            <input type="radio" name="arguments[<%= @input_name %>]" value="true">True
+          </label>
+          <label class="radio">
+            <input type="radio" name="arguments[<%= @input_name %>]" value="false">False
+          </label>
+          <%= @input_interface[:description] %>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>

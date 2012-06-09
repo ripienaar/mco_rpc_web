@@ -1,0 +1,15 @@
+<p class="lead">Managing <%= @rpcutil.discover.size %> nodes using the <%= @rpcutil.agent.client.discoverer.discovery_method %> discovery plugin</p>
+<br />
+<H3>Available Agents</H3>
+<br />
+<table class="table table-condensed table-striped table-bordered table-sorted">
+  <thead>
+    <th>Agent</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    <% MCORPC::MCWrapper.agents.each do |agent| %>
+      <tr><td><a href="/agent/<%= agent[0] %>"><%= agent[0] %></a></td><td><%= agent[1] %></td></tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,26 @@
+.table-selectable {
+  width: 100%;
+  border-left: 1px solid #DDD;
+  border-right: 1px solid #DDD;
+  border-top: 1px solid #DDD;
+  border-radius: 4px;
+  border-spacing: 0;
+}
+
+.table-selectable td {
+  font: 10pt Arial, sans-serif;
+  padding: 10px;
+  border-left: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+}
+
+.table-selectable .ui-selected { background: #08C; color: white; }
+.table-selectable .ui-selecting { background: #F2F2F2; }
+
+
+/* Lasso around multiple selections */
+.ui-selectable-helper{
+  position:absolute;
+  z-index:100;
+  border:1px dotted black;
+}
