@@ -44,20 +44,18 @@
     <% end %>
 
     <div class="tab-pane fade in" id="discovery">
-      <div class="input-prepend offset2">
-        &nbsp;<button onclick='return(false);' type="submit" class="btn" id="combined_filter_btn"><i class="icon-search"></i>Filter</button><button onclick='return(false);' type="submit" class="btn" id="combined_filter_reset"><i class="icon-remove"></i>Reset</button><input class="span9" type="text" id="combined_filter_value" name="filter[combined]" placeholder="Combined Filter (-W)" size="200">
+      <br />
+      <div class="input-prepend offset1">
+        &nbsp;<button onclick='return(false);' type="submit" class="btn" id="combined_filter_btn"><i class="icon-search"></i>Filter</button><button onclick='return(false);' type="submit" class="btn" id="combined_filter_reset"><i class="icon-remove"></i>Reset</button><input class="span8" type="text" id="combined_filter_value" name="filter[combined]" placeholder="Combined Filter (-W)" size="200">
       </div>
       <br />
       <br />
       <H3>Discovered Nodes</H3>
-      <br />
-      <div class="span8">
       <table id="discovered-nodes" class="table-selectable">
         <tbody>
           <tr><td colspan=6>No search done yet, all nodes with the <%= @agent %> agent will be affected</td></tr>
         </tbody>
       </table>
-      </div>
     </div>
   </div>
 

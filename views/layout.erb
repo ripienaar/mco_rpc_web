@@ -3,11 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>mcollective rpc</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!--
     <link rel="stylesheet/less" type="text/css" href="/less/bootstrap.less">
-    <link rel="stylesheet/less" type="text/css" href="/less/responsive.less">
 
     <script type="text/javascript" src="/js/less-1.3.0.min.js"></script>
     -->
@@ -62,18 +59,13 @@
       </div>
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span1">
-          <% if @results %>
-            <%= erb :_request_overview %>
+        <div class="span12">
+          <% if @error %>
+            <div class="alert alert-error">
+              <%= @error %>
+            </div>
           <% end %>
-        </div>
-        <div class="span11">
-            <% if @error %>
-              <div class="alert alert-error">
-                <%= @error %>
-              </div>
-            <% end %>
-            <%= yield %>
+          <%= yield %>
         </div>
       </div>
     </div>

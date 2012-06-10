@@ -6,16 +6,16 @@
   if @verbose
     @display_mode = "all"
   else
-    @display_mode = @action_ddl[:display] == :always ? "all" : @action_ddl[:display].to_s
+    @display_mode = @action_ddl[:display] == :always ? "all" : @action_ddl[:display].to_s.downcase
   end
 %>
 
+<h6><em><%= @agent %> / <%= @action %></em></h6>
 <% unless @arguments.empty? %>
-  <h6>Request Arguments</h6>
   <%= @arguments.map {|v| "%s=%s" % [v.first, v.last.to_s.gsub("'", "\'")]}.join(" ") %>
-  <br />
-  <br />
 <% end %>
+<br />
+<br />
 
 <% if @ok_count > 0 && (@action_ddl[:display] != :failed || @verbose) %>
     <h6>Successful Responses</h6>
@@ -28,17 +28,23 @@
 <% end %>
 
 <% unless @results.empty? %>
-  <% if @error_count > 0 && @ok_count == 0 %>
-      <div class="alert alert-error">
-  <% elsif @error_count > 0 && @ok_count > 0 %>
-      <div class="alert alert-warning">
-  <% elsif @error_count == 0 && @ok_count == 0 %>
-      <div class="alert alert-error">
+  <% if @display_mode == "ok" %>
+    <% if @ok_count == 0 %>
+      <div class="alert alert-error"><span class="badge badge-important">ERROR</span>
+    <% else %>
+      <div class="alert alert-success"><span class="badge badge-success">OK</span>
+    <% end %>
   <% else %>
-      <div class="alert alert-success">
+    <% if @error_count >= 0 && @ok_count == 0 %>
+      <div class="alert alert-error"><span class="badge badge-important">ERROR</span>
+    <% elsif @error_count > 0 && @ok_count > 0 %>
+      <div class="alert alert-warning"><span class="badge badge-warning">WARN</span>
+    <% else %>
+      <div class="alert alert-success"><span class="badge badge-success">OK</span>
+    <% end %>
   <% end %>
 
-  <p><strong><%= @ok_count %></strong> successful and <strong><%= @error_count %></strong> failed responses. Showing <strong><%= @display_mode %></strong> results.</p>
+  <strong><%= @ok_count %></strong> successful and <strong><%= @error_count %></strong> failed responses. Showing <strong><%= @display_mode %></strong> results.
   </div>
 <% end %>
 
