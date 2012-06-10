@@ -24,3 +24,12 @@
   z-index:100;
   border:1px dotted black;
 }
+
+.hash_result_set td {
+  border-color: transparent;
+}
+
+.hash_result_set .hr_key {
+  font-weight: bold;
+  text-align: right;
+}

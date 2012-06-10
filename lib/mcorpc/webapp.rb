@@ -33,8 +33,17 @@ class MCORPC
           if result.include?("\n")
             "<pre>%s</pre>" % result.split("\n").map{|r| h(r)}.join("<br>")
           else
-            result
+            h(result)
           end
+        elsif result.is_a?(Hash)
+          out = StringIO.new
+          out.puts "<table class='hash_result_set'>"
+
+          result.keys.sort_by{|k| k.to_s}.each do |r|
+            out.puts "<tr><td class='hr_key'>%s</td><td class='hr_value'>%s</td></tr>" % [h(r), display_result(result[r])]
+          end
+          out.puts "</table>"
+          out.string
         elsif result.is_a?(Array)
           out = StringIO.new
           result.each do |r|
@@ -50,7 +59,7 @@ class MCORPC
         elsif result.is_a?(FalseClass)
           '<i class="icon-remove"></i>'
         else
-          "<pre>" + result.pretty_inspect + "</pre>"
+          "<pre>" + h(result.pretty_inspect) + "</pre>"
         end
       end
 
