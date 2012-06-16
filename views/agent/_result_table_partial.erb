@@ -13,13 +13,15 @@
       <tbody>
       <% @results.select{|r| @partial_statuses.include?(r[:statuscode])}.each do |result| %>
         <tr>
-          <td><%= result[:sender] %></td>
+          <td style="width: 10%"><%= result[:sender] %></td>
           <% unless @partial_statuses == [0] %>
-            <td><%= label_for_code(result[:statuscode], result[:statusmsg]) %></td>
+            <td style="width: 5%"><%= label_for_code(result[:statuscode], result[:statusmsg]) %></td>
           <% end %>
           <% @action_ddl[:output].keys.sort.each do |field| %>
             <td>
-              <%= display_result result[:data][field] %>
+              <% if result[:data] %>
+                <%= display_result result[:data][field] rescue h(result.pretty_inspect) %>
+              <% end %>
             </td>
           <% end %>
         </tr>

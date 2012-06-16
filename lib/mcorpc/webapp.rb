@@ -98,6 +98,7 @@ class MCORPC
       @ddl = MCollective::DDL.new(@data_plugin, :data)
 
       @client = MCWrapper.new(@agent)
+      @client.agent.timeout = @client.agent.discovery_timeout + @ddl.meta[:timeout]
 
       begin
         if params["filter"]["identity"]
