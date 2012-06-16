@@ -4,13 +4,7 @@
 
 <H3>Agent Metadata</H3>
 <br />
-<dl class="dl-horizontal">
-  <dt>Author:</dt><dd><%= @ddl.meta[:author] %></dd>
-  <dt>Version</dt><dd><%= @ddl.meta[:version] %></dd>
-  <dt>License</dt><dd><%= @ddl.meta[:license] %></dd>
-  <dt>Timeout</dt><dd><%= @ddl.meta[:timeout] %></dd>
-  <dt>Homepage</dt><dd><a href="<%= @ddl.meta[:url] %>"><%= @ddl.meta[:url] %></a></dd>
-</dl>
+<%= erb :_meta_data_partial %>
 
 <H3>Actions</H3>
 <table class="table table-condensed table-striped table-bordered table-sorted">

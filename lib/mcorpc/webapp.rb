@@ -23,7 +23,7 @@ class MCORPC
       def render_input_form(input, input_interface)
         @input_name = input
         @input_interface = input_interface
-        erb :render_input_form
+        erb :"agent/render_input_form"
       end
 
       alias_method :h, :escape_html
@@ -85,6 +85,45 @@ class MCORPC
       erb :index
     end
 
+    get '/data/:data_plugin' do
+      @agent = "rpcutil"
+      @data_plugin = params[:data_plugin]
+      @ddl = MCollective::DDL.new(@data_plugin, :data)
+      erb :"data/data_overview"
+    end
+
+    get '/data/:data_plugin/query' do
+      @agent = "rpcutil"
+      @data_plugin = params[:data_plugin]
+      @ddl = MCollective::DDL.new(@data_plugin, :data)
+
+      @client = MCWrapper.new(@agent)
+
+      begin
+        if params["filter"]["identity"]
+          @client.agent.discover :nodes => params["filter"]["identity"]
+        elsif params["filter"]["combined"]
+          @client.apply_combined_filter(params["filter"]["combined"])
+        end
+
+        @results, @arguments = @client.call("get_data", params["arguments"].merge({:source => @data_plugin}))
+      rescue Exception => e
+        @results = []
+        @error = "Failed to run request <em>%s#%s</em>: <strong>%s</strong> (%s)" % [@agent, @action, e.to_s, e.class]
+      end
+
+      @arguments ||= {}
+
+      erb :"data/result_view"
+    end
+
+    get '/agent/:agent' do
+      @agent = params[:agent]
+      @ddl = MCollective::DDL.new(@agent)
+      @actions = @ddl.actions
+      erb :"agent/agent_overview"
+    end
+
     get '/agent/:agent/discover/combined/:filter' do
       @agent = params[:agent]
       @client = MCWrapper.new(@agent)
@@ -124,7 +163,7 @@ class MCORPC
 
       @arguments ||= {}
 
-      erb :generic_result_view
+      erb :"agent/generic_result_view"
     end
 
     get '/agent/:agent/action/:action' do
@@ -144,14 +183,7 @@ class MCORPC
         input unless @action_interface[:input][input][:optional]
       end.compact
 
-      erb :render_agent_form
-    end
-
-    get '/agent/:agent' do
-      @agent = params[:agent]
-      @ddl = MCollective::DDL.new(@agent)
-      @actions = @ddl.actions
-      erb :agent_overview
+      erb :"agent/render_agent_form"
     end
   end
 end

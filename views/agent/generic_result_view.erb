@@ -19,12 +19,12 @@
 
 <% if @ok_count > 0 && (@action_ddl[:display] != :failed || @verbose) %>
     <h6>Successful Responses</h6>
-    <%= @partial_statuses = [0]; erb :_result_table_partial %>
+    <%= @partial_statuses = [0]; erb :"agent/_result_table_partial" %>
 <% end %>
 
 <% if @error_count > 0 && (@action_ddl[:display] != :ok || @verbose) %>
     <h6>Failed Responses</h6>
-    <%= @partial_statuses = [1,2,3,4,5]; erb :_result_table_partial %>
+    <%= @partial_statuses = [1,2,3,4,5]; erb :"agent/_result_table_partial" %>
 <% end %>
 
 <% unless @results.empty? %>

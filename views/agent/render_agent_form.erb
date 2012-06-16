@@ -22,17 +22,16 @@
           <%= render_input_form(input, @action_interface[:input][input]) %>
         <% end %>
       <% end %>
-        <fieldset>
-          <div class="control-group">
-            <label class="control-label">
-              Dispaly all results
-            </label>
-            <div class="controls">
-              <input type="checkbox" name="options[verbose]" value="true">
-            </div>
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label">
+            Dispaly all results
+          </label>
+          <div class="controls">
+            <input type="checkbox" name="options[verbose]" value="true">
           </div>
-        </fieldset>
-
+        </div>
+      </fieldset>
     </div>
 
     <% if @optional_inputs.size > 0 %>

@@ -62,6 +62,13 @@ class MCORPC
       [@agent.send(action, request_arguments.clone), request_arguments]
     end
 
+    def self.data_plugins
+      MCollective::PluginManager.find(:data, "ddl").map do |data|
+        ddl = MCollective::DDL.new(data, :data)
+        [ data, ddl.meta[:description] ]
+      end
+    end
+
     def self.agents
       MCollective::PluginManager.find(:agent, "ddl").map do |agent|
         ddl = MCollective::DDL.new(agent)

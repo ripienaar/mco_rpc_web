@@ -1,0 +1,51 @@
+<%
+  @ok_count = @client.stats.okcount
+  @error_count = @client.stats.failcount
+  @action_ddl = @ddl.dataquery_interface
+%>
+
+<h6><em><%= @data_plugin %> / <%= h @arguments[:query] %></em></h6>
+<br />
+<br />
+
+<% if @ok_count > 0 %>
+    <h6>Successful Responses</h6>
+    <%= @partial_statuses = [0]; erb :"agent/_result_table_partial" %>
+<% end %>
+
+<% if @error_count > 0 && (@action_ddl[:display] != :ok || @verbose) %>
+    <h6>Failed Responses</h6>
+    <%= @partial_statuses = [1,2,3,4,5]; erb :"agent/_result_table_partial" %>
+<% end %>
+
+<% unless @results.empty? %>
+  <% if @display_mode == "ok" %>
+    <% if @ok_count == 0 %>
+      <div class="alert alert-error"><span class="badge badge-important">ERROR</span>
+    <% else %>
+      <div class="alert alert-success"><span class="badge badge-success">OK</span>
+    <% end %>
+  <% else %>
+    <% if @error_count >= 0 && @ok_count == 0 %>
+      <div class="alert alert-error"><span class="badge badge-important">ERROR</span>
+    <% elsif @error_count > 0 && @ok_count > 0 %>
+      <div class="alert alert-warning"><span class="badge badge-warning">WARN</span>
+    <% else %>
+      <div class="alert alert-success"><span class="badge badge-success">OK</span>
+    <% end %>
+  <% end %>
+
+  <strong><%= @ok_count %></strong> successful and <strong><%= @error_count %></strong> failed responses. Showing <strong><%= @display_mode %></strong> results.
+  </div>
+<% end %>
+
+<% unless request.referer == "/" %>
+    <a href="<%= request.referer %>" class="btn large primary">Back</a>
+<% end %>
+
+<script>
+  $(function () {
+    $("th[rel=popover]").popover({placement: "bottom", delay: 1000});
+  })
+</script>
+

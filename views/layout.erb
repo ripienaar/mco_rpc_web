@@ -39,11 +39,11 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Agents<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <% MCORPC::MCWrapper.agents.each do |agent| %>
-                    <li><a href="/agent/<%= agent[0] %>"><%= agent[0].capitalize %></a></li>
+                    <li><a href="/agent/<%= agent[0] %>"><%= agent[1].capitalize %></a></li>
                   <% end %>
                 </ul>
               </li>
-              <% if @ddl %>
+              <% if @ddl && @ddl.instance_variable_get("@plugintype") == :agent %>
               <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Actions<b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -53,6 +53,15 @@
                 </ul>
               </li>
               <% end %>
+              <li class="divider-vertical"></li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Data Sources<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <% MCORPC::MCWrapper.data_plugins.each do |data| %>
+                    <li><a href="/data/<%= data[0] %>"><%= data[1].capitalize %></a></li>
+                  <% end %>
+                </ul>
+              </li>
             </ul>
           </div>
         </div>
